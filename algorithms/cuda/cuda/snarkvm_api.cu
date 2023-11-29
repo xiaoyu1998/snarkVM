@@ -58,6 +58,8 @@ extern "C" {
         if (!snarkvm_g.ok()) {
             return RustError{cudaErrorMemoryAllocation};
         }
+
+        printf("C++ snarkvm_ntt lg_domain_size");
         return snarkvm_g->NTT(inout, inout, lg_domain_size, ntt_order,
                               ntt_direction, ntt_type);
     }
