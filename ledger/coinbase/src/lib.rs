@@ -122,11 +122,13 @@ impl<N: Network> CoinbasePuzzle<N> {
         };
 
         let polynomial = Self::prover_polynomial(epoch_challenge, address, nonce)?;
+        // println!("prove polynomial: {}", polynomial.coeffs().len());
 
         //end_timer(&msmtime, "polynomial");
-
         let product_evaluations = {
             let polynomial_evaluations = pk.product_domain.in_order_fft_with_pc(&polynomial, &pk.fft_precomputation);
+
+            // println!("polynomial_evaluations: {}", polynomial_evaluations.len());
             let product_evaluations = pk.product_domain.mul_polynomials_in_evaluation_domain(
                 polynomial_evaluations,
                 &epoch_challenge.epoch_polynomial_evaluations().evaluations,

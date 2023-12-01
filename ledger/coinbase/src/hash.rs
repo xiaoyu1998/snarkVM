@@ -40,6 +40,7 @@ pub fn hash_to_coefficients<F: PrimeField>(input: &[u8], num_coefficients: u32) 
 pub fn hash_to_polynomial<F: PrimeField>(input: &[u8], degree: u32) -> DensePolynomial<F> {
     // Hash the input into coefficients.
     let coefficients = hash_to_coefficients(input, degree + 1);
+    
     // Construct the polynomial from the coefficients.
     DensePolynomial::from_coefficients_vec(coefficients)
 }

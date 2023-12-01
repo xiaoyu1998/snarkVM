@@ -42,8 +42,10 @@ impl<N: Network> EpochChallenge<N> {
 
         let epoch_polynomial = hash_to_polynomial::<<N::PairingCurve as PairingEngine>::Fr>(&input, degree);
         ensure!(u32::try_from(epoch_polynomial.degree()).is_ok(), "Degree is too large");
+        //println!("epoch_polynomial: {}", epoch_polynomial.coeffs().len());
 
         let epoch_polynomial_evaluations = epoch_polynomial.evaluate_over_domain_by_ref(product_domain);
+        //println!("epoch_polynomial_evaluations: {}", epoch_polynomial_evaluations.evaluations().len());
         // Returns the epoch challenge.
         Ok(EpochChallenge { epoch_number, epoch_block_hash, epoch_polynomial, epoch_polynomial_evaluations })
     }
