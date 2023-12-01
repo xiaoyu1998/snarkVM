@@ -149,6 +149,9 @@ pub fn msm<Affine, Projective, Scalar>(points: &[Affine], scalars: &[Scalar]) ->
     if npoints > points.len() {
         panic!("length mismatch {} points < {} scalars", npoints, scalars.len())
     }
+
+    println!("rust msm points {}, scalars {}", points.len(),scalars.len());
+
     #[allow(clippy::uninit_assumed_init)]
     let mut ret: Projective = unsafe { std::mem::MaybeUninit::uninit().assume_init() };
     let err = unsafe {

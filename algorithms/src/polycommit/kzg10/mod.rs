@@ -40,6 +40,7 @@ mod data_structures;
 pub use data_structures::*;
 
 use super::sonic_pc::LabeledPolynomialWithBasis;
+use cactus_timer::{start_timer, end_timer};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum KZGDegreeBounds {
@@ -173,10 +174,15 @@ impl<E: PairingEngine> KZG10<E> {
             hiding_bound,
         ));
 
+        let msmtime = start_timer("");
+
         let evaluations = evaluations.iter().map(|e| e.to_bigint()).collect::<Vec<_>>();
         let msm_time = start_timer!(|| "MSM to compute commitment to plaintext poly");
         let mut commitment = VariableBase::msm(&lagrange_basis.lagrange_basis_at_beta_g, &evaluations);
         end_timer!(msm_time);
+
+        //format!("commitment, evaluations size {}", evaluations.len())
+        end_timer(&msmtime, format!("commitment,basis {}, evaluations {}", lagrange_basis.lagrange_basis_at_beta_g.len(), evaluations.len()).as_str());
 
         let mut randomness = KZGRandomness::empty();
         if let Some(hiding_degree) = hiding_bound {

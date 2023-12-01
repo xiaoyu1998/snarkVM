@@ -250,13 +250,15 @@ public:
     RustError MSM(point_t* out, const affine_t points[], size_t npoints,
                   const scalar_t scalars[], size_t ffi_affine_size) {
         // SNP TODO: cleanup
-        // auto start = Clock::now();
+        auto start = Clock::now();
 
         size_t gpu_count = min(ngpus(), npoints);
         point_t partial_sums[gpu_count];
         size_t bases_per_gpu = (npoints + gpu_count - 1) / gpu_count;
         channel_t<size_t> ch;
         RustError error = RustError{cudaSuccess};
+
+        // printf("gpu_count %d\n", gpu_count );
 
         // Divide the MSM among the GPUs
         for (size_t i = 0; i < gpu_count; i++) {
@@ -294,10 +296,10 @@ public:
             dev = ch.recv();
             point_t::dadd(*out, *out, partial_sums[dev]);
         }
-        // auto end = Clock::now();
-        // uint64_t dt = std::chrono::duration_cast<
-        //     std::chrono::microseconds>(end - start).count();
-        // printf("MSM size %ld took %ld us\n", npoints, dt);
+        auto end = Clock::now();
+        uint64_t dt = std::chrono::duration_cast<
+            std::chrono::microseconds>(end - start).count();
+        printf("MSM size %ld took %ld us\n", npoints, dt);
 
         return error;
         

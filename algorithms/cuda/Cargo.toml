@@ -34,7 +34,7 @@ features = [ ]
 
 [dependencies.sppark]
 #version = "0.1.5"
-path = "../../../sppark-0.1.5"
+path = "../../../sppark-rust"
 
 [build-dependencies.cc]
 version = "^1.0.83"

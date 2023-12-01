@@ -26,7 +26,7 @@ edition = "2021"
 [[bench]]
 name = "variable_base"
 path = "benches/msm/variable_base.rs"
-harness = false
+harness = true
 
 [[bench]]
 name = "poseidon_sponge"
@@ -44,6 +44,10 @@ name = "varuna"
 path = "benches/snark/varuna.rs"
 harness = false
 required-features = [ "test" ]
+
+[dependencies.cactus-timer]
+package = "cactus-timer"
+path = "../../timer"
 
 [dependencies.snarkvm-curves]
 path = "../curves"

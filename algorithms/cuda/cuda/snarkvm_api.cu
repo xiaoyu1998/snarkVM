@@ -59,7 +59,7 @@ extern "C" {
             return RustError{cudaErrorMemoryAllocation};
         }
 
-        printf("C++ snarkvm_ntt lg_domain_size");
+        // printf("C++ snarkvm_ntt lg_domain_size %d", lg_domain_size);
         return snarkvm_g->NTT(inout, inout, lg_domain_size, ntt_order,
                               ntt_direction, ntt_type);
     }
@@ -82,6 +82,7 @@ extern "C" {
         if (!snarkvm_g.ok()) {
             return RustError{cudaErrorMemoryAllocation};
         }
+        printf("C++ points %d ffi_affine_size %d\n", npoints, ffi_affine_size);
         return snarkvm_g->MSM(out, points, npoints, scalars, ffi_affine_size);
     }
 }

@@ -37,6 +37,8 @@ use snarkvm_curves::PairingEngine;
 use snarkvm_fields::Zero;
 use snarkvm_synthesizer_snark::UniversalSRS;
 
+use cactus_timer::{start_timer, end_timer};
+
 use aleo_std::prelude::*;
 use std::sync::Arc;
 
@@ -113,12 +115,15 @@ impl<N: Network> CoinbasePuzzle<N> {
         minimum_proof_target: Option<u64>,
     ) -> Result<ProverSolution<N>> {
         // Retrieve the coinbase proving key.
+        //let msmtime = start_timer("");
         let pk = match self {
             Self::Prover(coinbase_proving_key) => coinbase_proving_key,
             Self::Verifier(_) => bail!("Cannot prove the coinbase puzzle with a verifier"),
         };
 
         let polynomial = Self::prover_polynomial(epoch_challenge, address, nonce)?;
+
+        //end_timer(&msmtime, "polynomial");
 
         let product_evaluations = {
             let polynomial_evaluations = pk.product_domain.in_order_fft_with_pc(&polynomial, &pk.fft_precomputation);
@@ -128,8 +133,11 @@ impl<N: Network> CoinbasePuzzle<N> {
             );
             product_evaluations
         };
-        let (commitment, _rand) = KZG10::commit_lagrange(&pk.lagrange_basis(), &product_evaluations, None, None)?;
+        //end_timer(&msmtime, "fft");
 
+        let (commitment, _rand) = KZG10::commit_lagrange(&pk.lagrange_basis(), &product_evaluations, None, None)?;
+        //end_timer(&msmtime, "commitment");
+ 
         let partial_solution = PartialSolution::new(address, nonce, commitment);
 
         // Check that the minimum target is met.
@@ -143,6 +151,7 @@ impl<N: Network> CoinbasePuzzle<N> {
 
         let point = hash_commitment(&commitment)?;
         let product_eval_at_point = polynomial.evaluate(point) * epoch_challenge.epoch_polynomial().evaluate(point);
+        //end_timer(&msmtime, "product_eval_at_point");
 
         let proof = KZG10::open_lagrange(
             &pk.lagrange_basis(),
@@ -151,10 +160,13 @@ impl<N: Network> CoinbasePuzzle<N> {
             point,
             product_eval_at_point,
         )?;
+
+        //end_timer(&msmtime, "open_lagrange");
         ensure!(!proof.is_hiding(), "The prover solution must contain a non-hiding proof");
 
         debug_assert!(KZG10::check(&pk.verifying_key, &commitment, point, product_eval_at_point, &proof)?);
 
+        //end_timer(&msmtime, "KZG10::check");
         Ok(ProverSolution::new(partial_solution, proof))
     }
 
