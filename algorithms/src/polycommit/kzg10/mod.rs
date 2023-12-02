@@ -174,7 +174,7 @@ impl<E: PairingEngine> KZG10<E> {
             hiding_bound,
         ));
 
-        let msmtime = start_timer("");
+        //let msmtime = start_timer("");
 
         let evaluations = evaluations.iter().map(|e| e.to_bigint()).collect::<Vec<_>>();
         let msm_time = start_timer!(|| "MSM to compute commitment to plaintext poly");
@@ -182,7 +182,7 @@ impl<E: PairingEngine> KZG10<E> {
         end_timer!(msm_time);
 
         //format!("commitment, evaluations size {}", evaluations.len())
-        end_timer(&msmtime, format!("commitment,basis {}, evaluations {}", lagrange_basis.lagrange_basis_at_beta_g.len(), evaluations.len()).as_str());
+        //end_timer(&msmtime, format!("commitment,basis {}, evaluations {}", lagrange_basis.lagrange_basis_at_beta_g.len(), evaluations.len()).as_str());
 
         let mut randomness = KZGRandomness::empty();
         if let Some(hiding_degree) = hiding_bound {
