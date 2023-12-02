@@ -82,7 +82,7 @@ extern "C" {
         if (!snarkvm_g.ok()) {
             return RustError{cudaErrorMemoryAllocation};
         }
-        printf("C++ points %d ffi_affine_size %d\n", npoints, ffi_affine_size);
+        // printf("C++ points %d ffi_affine_size %d\n", npoints, ffi_affine_size);
         return snarkvm_g->MSM(out, points, npoints, scalars, ffi_affine_size);
     }
 }

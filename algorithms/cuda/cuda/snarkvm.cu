@@ -250,7 +250,7 @@ public:
     RustError MSM(point_t* out, const affine_t points[], size_t npoints,
                   const scalar_t scalars[], size_t ffi_affine_size) {
         // SNP TODO: cleanup
-        auto start = Clock::now();
+        // auto start = Clock::now();
 
         size_t gpu_count = min(ngpus(), npoints);
         point_t partial_sums[gpu_count];
@@ -296,10 +296,10 @@ public:
             dev = ch.recv();
             point_t::dadd(*out, *out, partial_sums[dev]);
         }
-        auto end = Clock::now();
-        uint64_t dt = std::chrono::duration_cast<
-            std::chrono::microseconds>(end - start).count();
-        printf("MSM size %ld took %ld us\n", npoints, dt);
+        // auto end = Clock::now();
+        // uint64_t dt = std::chrono::duration_cast<
+        //     std::chrono::microseconds>(end - start).count();
+        // printf("MSM size %ld took %ld us\n", npoints, dt);
 
         return error;
         
