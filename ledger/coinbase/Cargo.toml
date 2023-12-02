@@ -49,7 +49,7 @@ wasm = [
 
 [dependencies.cactus-timer]
 package = "cactus-timer"
-path = "../../../timer"
+path = "../../../cactus-timer"
 
 [dependencies.console]
 package = "snarkvm-console"
