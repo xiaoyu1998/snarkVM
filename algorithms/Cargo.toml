@@ -47,7 +47,7 @@ required-features = [ "test" ]
 
 [dependencies.cactus-timer]
 package = "cactus-timer"
-path = "../../timer"
+path = "../../cactus-timer"
 
 [dependencies.snarkvm-curves]
 path = "../curves"
